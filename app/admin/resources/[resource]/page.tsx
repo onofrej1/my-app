@@ -2,10 +2,11 @@
 import { Fragment, useReducer } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import React from 'react';
-import List from 'components/List';
+import List from 'components/resources/List';
 //import { Form } from 'pages/resources/Form';@
 //import { resources } from 'resources';
 import { resources } from 'resources';
+import { Form } from 'components/resources/Form';
 
 type ResourcesState =
     | { name: string, view: 'list', rowId: null }
@@ -75,7 +76,7 @@ export default function Resource({ params }: { params: { resource: string } }) {
                     </Stack>
                     <List resource={state} dispatch={dispatch} />
                 </div>}
-            {state.view === 'form' && <div>form</div>}
+            {state.view === 'form' && <Form resource={state} dispatch={dispatch} />}
         </div>
     );
 };

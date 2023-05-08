@@ -56,14 +56,9 @@ export async function GET(request: Request, { params }: any) {
   const q = request.url?.split("?");
   const qs = q?.length === 2 ? q[1] : "";
 
-  let parsed = queryString.parse(qs, {
-    arrayFormat: "comma",
-    parseNumbers: true,
-  });
-  //let { skip, take, select, page, order, include, search, searchFields, ...query } = parsed;
   const queryStr = querystr.parse(qs);
-  console.log(parsed);
   console.log(queryStr);
+
   let {
     skip,
     take,
@@ -75,13 +70,16 @@ export async function GET(request: Request, { params }: any) {
     searchFields,
     ...query
   } = queryStr;
-  page = Number(page) || 0;
-  take = Number(take) || 10;
-  skip = page && page > 0 ? take * (page + 1) - take : skip;
+
+  if (page && take) {
+    page = Number(page);
+    take = Number(take);
+    skip = page && page > 0 ? take * (page + 1) - take : skip;
+  }
 
   const m = resources[resource];
 
-  let selectQuery = {};
+  let selectQuery;
   if (select && Array.isArray(select)) {
     selectQuery = select.reduce((a, v) => ({ ...a, [v!]: true }), {});
   }
@@ -95,15 +93,8 @@ export async function GET(request: Request, { params }: any) {
     return obj;
   }, {});
 
-  console.log(include);
+  //console.log(include);
   const relations = buildRelationQuery(include, true);
-  //console.log(relations);
-
-  /*const operators = ['contains', 'startsWith', 'endsWith', 'equals'].reduce((obj: any, op) => {
-      let key = op.toLowerCase();
-      obj[key] = op;
-      return obj;
-    }, {});*/
 
   let where = {};
   Object.keys(query).forEach((key) => {
@@ -124,18 +115,19 @@ export async function GET(request: Request, { params }: any) {
     }
     where = _.merge(where, buildRelationQuery(searchKey + "." + oper, value));
   });
-  console.log(where);
+
+  //console.log(where);
+
   const r = await m.findMany({
-    //select: selectQuery,
+    select: selectQuery !== undefined ? selectQuery : undefined,
     where,
-    skip: Number(skip) || 0,
-    take: Number(take) || 10,
+    skip: skip !== undefined ? Number(skip) : undefined,
+    take: take !== undefined ? Number(take) : undefined,
     orderBy: order,
-    include: relations,
+    include: Object.keys(relations).length > 0 ? relations : undefined,
   });
 
   const count = await m.count({
-    //select: selectQuery,
     where,
   });
 
@@ -158,4 +150,12 @@ export async function GET(request: Request, { params }: any) {
   //console.log(users);
 
   return NextResponse.json({ count, results: r });
+}
+
+export async function POST(request: Request, { params }: any) {
+  console.log("boddy");
+  const data = await request.json();
+  console.log(data);
+
+  return NextResponse.json(data);
 }

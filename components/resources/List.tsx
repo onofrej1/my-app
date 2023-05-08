@@ -95,9 +95,6 @@ interface ListProps {
 }
 
 async function fetchResources(url: string, { arg }: { arg: any }) {
-    console.log(url);
-    console.log(arg);
-
     return await fetch(arg.url, {
         method: 'GET',
         /*headers: {

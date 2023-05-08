@@ -121,6 +121,7 @@ function Form<T extends FieldValues>(props: FormProps<T>) {
       if (action.type === 'submit') {
         onClick = () => handleSubmit(action.action as SubmitHandler<FieldValues>)();
       }
+      console.log(onClick);
 
       return (
         <Button

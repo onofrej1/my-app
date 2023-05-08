@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 const rules = object({
-    employeeId: string().required(),
+    //employeeId: string().required(),
 });
 
 const post: Resource = {
@@ -22,9 +22,9 @@ const post: Resource = {
     ],
     form: [
         { name: 'title', type: 'text', label: 'Title' },
-        { name: 'content', type: 'date', label: 'Content' },
+        { name: 'content', type: 'text', label: 'Content' },
         {
-            name: 'user',
+            name: 'authorId',
             type: 'foreignKey',
             label: 'User',
             resource: 'users',
