@@ -1,3 +1,4 @@
+'use client';
 import React, { FC } from 'react';
 import { Form as AdminForm, FormAction } from 'components/form/Form';
 import { useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ import { Entity } from 'interfaces';
 import { ResourcesAction, ResourcesState } from 'app/admin/resources/[resource]/page';
 import { SelectOption } from 'resources/resources.types';
 import useSWRMutation from 'swr/mutation';
+import { fetcher, argFetcher } from 'utils';
 
 interface Props {
   resource: ResourcesState;
@@ -38,35 +40,11 @@ const getSelectOptions = (field: FormField, data: Entity[]) => {
   return options;
 };
 
-async function saveResources(url: string, { arg }: { arg: { url: string, data: any } }) {
-  return await fetch(arg.url, {
-    method: 'POST',
-    body: JSON.stringify(arg.data),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    }
-    /*headers: {
-      Authorization: `Bearer ${arg}`
-    }*/
-  })
-}
-
-async function fetchResources(url: string, { arg }: { arg: any }) {
-  return await fetch(arg.url, {
-    method: 'GET',
-    /*headers: {
-      Authorization: `Bearer ${arg}`
-    }*/
-  })
-}
-
 export const Form: FC<Props> = (props) => {
   const { resource, dispatch } = props;
-  //const { get, post, patch, error } = useFetch();
   const [fields, setFields] = useState<FormField[]>([]);
   const [data, setData] = useState<FormData>();
-  const { trigger, error } = useSWRMutation('/api/user', fetchResources);
-  const { trigger: triggerSave, error: errorSave } = useSWRMutation('/api/user', saveResources);
+  const { trigger, error } = useSWRMutation(`/api/resources/`, argFetcher);
 
   const config = resources.find(r => r.resource === resource.name);
   if (!config) {
@@ -76,10 +54,8 @@ export const Form: FC<Props> = (props) => {
 
   useEffect(() => {
     async function getData() {
-      const url = `/api/resources/${resource.name}/${resource.rowId}`;
-      const resp = await trigger({ url: url });
+      const resp = await trigger({ path: `${resource.name}/${resource.rowId}` });
       const data = await resp?.json();
-      console.log(data);
       //const data = await get(url);
 
       Object.keys(data).forEach((key: string) => {
@@ -101,8 +77,7 @@ export const Form: FC<Props> = (props) => {
           ['foreignKey', 'many2many'].includes(field.type) &&
           field.resource
         ) {
-          //const data = await get(`/api/resources/${field.resource}`);
-          const resp = await trigger({ url: `/api/resources/${field.resource}` });
+          const resp = await trigger({ path: `${field.resource}` });
           const data = await resp?.json();
           field.options = getSelectOptions(field, data.results);
         }
@@ -118,15 +93,13 @@ export const Form: FC<Props> = (props) => {
   }, [formConfig, trigger, resource.name, resource.rowId]);
 
   const saveData = async (data: FormData) => {
-    const url = `${resource.name}/`;
+    const path = `${resource.name}/`;
     if (data.id) {
-      //await patch(`${url}${resource.rowId}/`, data);
+      await trigger({ path: path + data.id, method: 'PATCH', data });
     } else {
-      const resp = await triggerSave({ url: `/api/resources/${resource.name}`, data });
-      const d = await resp?.json();
-      //await post(url, data);
+      await trigger({ path, method: 'POST', data });
     }
-    errorSave ? toast.error('An error occured.') : toast.success('Changes saved.');
+    error ? toast.error('An error occured.') : toast.success('Changes saved.');
   };
 
   const actions: FormAction<FormData>[] = [

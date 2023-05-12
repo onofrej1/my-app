@@ -52,7 +52,7 @@ function Form<T extends FieldValues>(props: FormProps<T>) {
     defaultValues: defaultData
   };
   if (rules) {
-    formHook.resolver = yupResolver(rules);
+    //formHook.resolver = yupResolver(rules);
   }
   const { handleSubmit, control, reset, getValues } = useForm(formHook);
 
@@ -119,9 +119,10 @@ function Form<T extends FieldValues>(props: FormProps<T>) {
         onClick = () => reset(data);
       }
       if (action.type === 'submit') {
-        onClick = () => handleSubmit(action.action as SubmitHandler<FieldValues>)();
+        onClick = () => {
+          handleSubmit(action.action as SubmitHandler<FieldValues>)();
+        };
       }
-      console.log(onClick);
 
       return (
         <Button
@@ -131,6 +132,7 @@ function Form<T extends FieldValues>(props: FormProps<T>) {
           color={action.color}
           sx={sx}
           disabled={action.disabled}
+          type={action.type}
           startIcon={<Icon />}>
           {action.label}
         </Button>
@@ -156,11 +158,12 @@ function Form<T extends FieldValues>(props: FormProps<T>) {
         </Stack>
       ) : (
         <>
-          <Button variant="contained" onClick={handleSubmit(submit)} color="primary">
+          <Button type="submit" variant="contained" onClick={handleSubmit(submit)} color="primary">
             Save
           </Button>
         </>
       )}
+
     </>
   );
 }
