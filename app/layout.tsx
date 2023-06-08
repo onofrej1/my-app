@@ -1,4 +1,5 @@
 import RootStyleRegistry from "./Emotion";
+import { NextAuthProvider } from "./authProvider";
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
@@ -6,7 +7,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       <head></head>
       <body>
         <RootStyleRegistry>
-          {children}
+          <NextAuthProvider>{children}</NextAuthProvider>
         </RootStyleRegistry>
       </body>
     </html>

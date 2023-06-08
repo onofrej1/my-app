@@ -242,16 +242,13 @@ export default function List(props: ListProps) {
         //const data = await get(url);
         const resp = await trigger({ url: url });
         const data = await resp?.json();
-        console.log(data);
+
         const pages = data.count && data.count > 0 ? Math.ceil(data.count / perPage) : 1;
         setPageCount(pages);
         if (data.results) {
             setData(data.results);
         }
     };
-
-    console.log(config);
-    console.log(data);
 
     return (
         <>

@@ -6,27 +6,25 @@ import {
   FormHelperText,
   Switch as MuiSwitch,
 } from '@mui/material';
-import { BaseProps } from './Field';
 import { SxProps } from '@mui/system';
 
-interface SwitchProps extends BaseProps {
+interface SwitchProps {
+  label: string;
+  helperText: string;
   checked: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-  wrapperSx?: SxProps;
 }
 
 export const Switch: FC<SwitchProps> = (props) => {
-  const { name, checked, label, helperText, wrapperSx, onChange } = props;  
+  const { checked, label, helperText } = props;
 
   return (
     <FormControl>
-      <FormGroup sx={wrapperSx}>
-        <FormControlLabel 
-          control={<MuiSwitch name={name} checked={checked} onChange={onChange} />} 
-          label={label || ''} 
+      <FormGroup>
+        <FormControlLabel
+          control={<MuiSwitch {...props} checked={checked} />}
+          label={label || ''}
         />
-
-      </FormGroup>    
+      </FormGroup>
       <FormHelperText>{helperText}</FormHelperText>
     </FormControl>
   );

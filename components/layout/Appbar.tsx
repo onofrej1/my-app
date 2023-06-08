@@ -8,6 +8,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HelpIcon from '@mui/icons-material/Help';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -31,6 +33,9 @@ export const StyledAppBar = styled(MuiAppBar, {
 
 export const AppBar = () => {
   const [open, setOpen] = React.useState(true);
+  const { data: session } = useSession();
+  console.log(session);
+
   const toggleDrawer = () => {
     //setOpen(!open);
   };
@@ -51,11 +56,11 @@ export const AppBar = () => {
             </IconButton>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
+                <NotificationsIcon onClick={() => signOut()} />
               </Badge>
             </IconButton>
             <IconButton color="inherit">
-              <AccountCircleIcon />
+              <AccountCircleIcon onClick={() => signIn()} />
             </IconButton>
           </Stack>
         </Stack>

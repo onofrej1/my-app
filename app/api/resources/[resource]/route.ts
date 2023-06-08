@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
 import _ from "lodash";
-import { resources } from "prisma/models";
 import { buildRelationQuery } from "services/utils";
+const db = require("models/index");
+
+const resources: Record<string, any> = {
+  users: db.User,
+  posts: db.Post,
+  categories: db.Category,
+};
 
 const querystr = require("node:querystring");
 
 export async function GET(request: Request, { params }: any) {
   const resource = params.resource;
-  const entity = resources[resource];
 
   const q = request.url?.split("?");
   const qs = q?.length === 2 ? q[1] : "";
@@ -34,18 +39,15 @@ export async function GET(request: Request, { params }: any) {
 
   const model = resources[resource];
 
-  let selectQuery;
-  if (select && Array.isArray(select)) {
-    selectQuery = select.reduce((a, v) => ({ ...a, [v!]: true }), {});
-  }
-
   order = order instanceof Array ? order : [order];
-  order = order.filter(Boolean).reduce((obj: any, value: string) => {
+  order = order.filter(Boolean).reduce((ord: any[], value: string) => {
     let column = value.startsWith("-") ? value.substring(1) : value;
     const direction = value.startsWith("-") ? "desc" : "asc";
-    obj = _.merge(obj, buildRelationQuery(column, direction));
-    return obj;
-  }, {});
+    //obj = _.merge(obj, buildRelationQuery(column, direction));
+    const orderBy = [column, direction];
+    ord.push(orderBy);
+    return ord;
+  }, []);
 
   const relations = buildRelationQuery(include, true);
 
@@ -65,15 +67,14 @@ export async function GET(request: Request, { params }: any) {
     where = _.merge(where, buildRelationQuery(searchKey + "." + oper, value));
   });
 
-  //console.log(where);
-
-  const data = await model.findMany({
-    select: selectQuery !== undefined ? selectQuery : undefined,
+  const data = await model.findAll({
+    atributes: select || [], //: selectQuery !== undefined ? selectQuery : undefined,
     where,
-    skip: skip !== undefined ? Number(skip) : undefined,
-    take: take !== undefined ? Number(take) : undefined,
-    orderBy: order,
-    include: Object.keys(relations).length > 0 ? relations : undefined,
+    offset: skip !== undefined ? Number(skip) : undefined,
+    limit: take !== undefined ? Number(take) : undefined,
+    order,
+    //include: include || [],
+    //include: Object.keys(relations).length > 0 ? relations : undefined,
   });
 
   const count = await model.count({
@@ -88,9 +89,7 @@ export async function POST(request: Request, { params }: any) {
   const resource = params.resource;
   const entity = resources[resource];
 
-  const newUser = await entity.create({
-    data,
-  });
+  const newEntity = await entity.create(data);
 
-  return NextResponse.json(data);
+  return NextResponse.json(newEntity);
 }

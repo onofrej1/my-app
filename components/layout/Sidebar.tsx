@@ -36,33 +36,6 @@ type MenuItem = {
 const Sidebar: React.FC<{}> = (props) => {
   const isSidebarOpened = true;
   const [menuOpened, setMenuOpened] = useState('');
-  //const navigate = useNavigate();
-  //const ability = useContext(AbilityContext);
-
-  /*const auth = (menuItem: MenuItem) => {
-    const children = menuItem.children;
-    if (children && children.length) {
-      let allowedSubPages = children.length;
-      children.forEach((item) => {
-        const accessRule = accessRules[item.name as RouteName];
-        if (accessRule) {
-          const hasAccess = ability.can(accessRule.action, accessRule.subject);
-          if (!hasAccess) {
-            allowedSubPages--;
-          }
-        }
-      });
-      return allowedSubPages > 0;
-    }
-
-    if (menuItem.name && accessRules[menuItem.name as RouteName]) {
-      const accessRule = accessRules[menuItem.name as RouteName];
-      if (accessRule) {
-        return ability.can(accessRule.action, accessRule.subject);
-      }
-    }
-    return true;
-  };*/
 
   const menuItems: MenuItem[] = [
     {
@@ -201,7 +174,6 @@ const Sidebar: React.FC<{}> = (props) => {
                   <List component="div" disablePadding>
                     {menuItem.children ?
                       menuItem.children
-                        //.filter((menuItem) => auth(menuItem))
                         .map((item) =>
                           isSidebarOpened ? (
                             <ListItemButton key={item.title} sx={{ pl: 11 }}>

@@ -15,7 +15,7 @@ import { Entity } from 'interfaces';
 import { ResourcesAction, ResourcesState } from 'app/admin/resources/[resource]/page';
 import { SelectOption } from 'resources/resources.types';
 import useSWRMutation from 'swr/mutation';
-import { fetcher, argFetcher } from 'utils';
+import { argFetcher } from 'utils';
 
 interface Props {
   resource: ResourcesState;
@@ -122,7 +122,6 @@ export const Form: FC<Props> = (props) => {
       color: 'primary',
       type: 'submit',
       action: async (formData) => {
-        console.log(formData);
         await saveData(formData);
         dispatch({ type: 'showList' });
       },

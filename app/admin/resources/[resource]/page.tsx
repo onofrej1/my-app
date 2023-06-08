@@ -1,10 +1,8 @@
 'use client';
-import { Fragment, useReducer } from 'react';
+import { useReducer } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import React from 'react';
 import List from 'components/resources/List';
-//import { Form } from 'pages/resources/Form';@
-//import { resources } from 'resources';
 import { resources } from 'resources';
 import { Form } from 'components/resources/Form';
 
@@ -55,13 +53,10 @@ export default function Resource({ params }: { params: { resource: string } }) {
     if (resourceName && state.name !== resourceName) {
         dispatch({ type: 'setName', name: resourceName });
     }
-    //console.log(resources);
     const config: any = resources.find(r => r.resource === resourceName);
     //if (!config) {
     //throw new Error('Missing resource configuration.');
     //}
-
-    //const List = (props: any) => <div>list</div>;
 
     return (
         <div>

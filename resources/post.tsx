@@ -12,36 +12,30 @@ const post: Resource = {
     name_plural: 'Posts',
     model: 'Post',
     resource: 'posts',
-    relations: ['author'],
+    relations: ['category'],
     canAddItem: false,
     menuIcon: '',
     rules,
     filter: [
         { name: 'title', type: 'text', label: 'Title' },
-        { name: 'content', type: 'text', label: 'Content' },
+        { name: 'body', type: 'text', label: 'Body' },
     ],
     form: [
         { name: 'title', type: 'text', label: 'Title' },
-        { name: 'content', type: 'text', label: 'Content' },
+        { name: 'body', type: 'text', label: 'Body' },
         {
-            name: 'authorId',
+            name: 'categoryId',
             type: 'foreignKey',
-            label: 'User',
-            resource: 'users',
+            label: 'Category',
+            resource: 'categories',
             valueField: 'id',
-            textField: 'name',
+            textField: 'title',
         },
     ],
     list: [
         { name: 'title', header: 'Title' },
-        {
-            name: 'content',
-            header: 'Content',
-        },
-        {
-            name: 'user',
-            header: 'User',
-        },
+        { name: 'body', header: 'Body' },
+        { name: 'CategoryId', header: 'Category' },
     ],
 };
 export { post };

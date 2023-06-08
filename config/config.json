@@ -1,0 +1,10 @@
+{
+  "development": {
+    "username": "test",
+    "password": "test",
+    "database": "myapp",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "dialectModule": "mysql"
+  }
+}

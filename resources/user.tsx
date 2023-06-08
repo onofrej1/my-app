@@ -20,11 +20,13 @@ const user: Resource = {
     { name: 'email', type: 'text', label: 'Email' },
   ],
   form: [
-    { name: 'name', type: 'text', label: 'Name' },
+    { name: 'firstName', type: 'text', label: 'First name' },
+    { name: 'lastName', type: 'text', label: 'Last name' },
     { name: 'email', type: 'text', label: 'Email' },
   ],
   list: [
-    { name: 'name', header: 'Name' },
+    { name: 'firstName', header: 'First name' },
+    { name: 'lastName', header: 'Last name' },
     {
       name: 'email',
       header: 'Email',

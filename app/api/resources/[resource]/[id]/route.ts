@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import _ from "lodash";
-import { resources } from "prisma/models";
+//import { resources } from "prisma/models";
 import { buildRelationQuery } from "services/utils";
+const db = require("models/index");
 
 const querystr = require("node:querystring");
+const resources: Record<string, any> = {
+  users: db.User,
+  posts: db.Post,
+};
 
 export async function GET(request: Request, { params }: any) {
   const resource = params.resource;
@@ -18,12 +23,9 @@ export async function GET(request: Request, { params }: any) {
 
   const relations = buildRelationQuery(include, true);
 
-  const data = await model.findFirst({
-    where: {
-      id: Number(params.id),
-    },
-    include: Object.keys(relations).length > 0 ? relations : undefined,
-  });
+  const data = await model.findByPk(Number(params.id));
+  //include: Object.keys(relations).length > 0 ? relations : undefined,
+  //});
 
   return NextResponse.json(data);
 }
@@ -33,12 +35,11 @@ export async function PATCH(request: Request, { params }: any) {
   const resource = params.resource;
   const entity = resources[resource];
 
-  const newUser = await entity.update({
+  const row = await entity.update(data, {
     where: {
       id: Number(params.id),
     },
-    data,
   });
 
-  return NextResponse.json(newUser);
+  return NextResponse.json(row);
 }

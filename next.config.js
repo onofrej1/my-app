@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    serverComponentsExternalPackages: ['sequelize']
   },
   modularizeImports: {
     "@mui/material/?(((\\w*)?/?)*)": {
@@ -10,7 +11,7 @@ const nextConfig = {
     "@mui/icons-material/?(((\\w*)?/?)*)": {
       transform: "@mui/icons-material/{{ matches.[1] }}/{{member}}",
     },
-  },
+  }  
 }
 
 module.exports = nextConfig

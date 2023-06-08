@@ -20,13 +20,15 @@
         "name": "next"
       }
     ],
+    "types": ["node"],
     "paths": {
       "services/*": ["./*"],
       "resources/*": ["./resources/*"],
       "app/*": ["./app/*"],
+      "models/*": ["./models/*"],
       "components/*": ["./components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "models/isOdd.js"],
   "exclude": ["node_modules"]
 }
